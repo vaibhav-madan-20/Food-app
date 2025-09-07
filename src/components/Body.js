@@ -30,7 +30,6 @@ const Body = () => {
           throw new Error("Error while fetching restaurant data");
         }
         const json = await data.json();
-        // console.log(json);
         const restaurants = json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
         setListofRestaurants(restaurants);
       }
@@ -41,7 +40,6 @@ const Body = () => {
 
     fetchData();
   }, []);
-
 
   const onlineStatus = useOnlineStatus();
   if (onlineStatus === false)
