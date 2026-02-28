@@ -20,8 +20,8 @@ const Body = () => {
       }
       else return r;
     })
-  } 
-    
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,11 +29,15 @@ const Body = () => {
         if (!data.ok) {
           throw new Error("Error while fetching restaurant data");
         }
-        const json = await data.json();
+        const text = await data.text();
+        if (!text) {
+          throw new Error("Empty response from API");
+        }
+        const json = JSON.parse(text);
         const restaurants = json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
         setListofRestaurants(restaurants);
       }
-      catch(e) {
+      catch (e) {
         console.log(e);
       }
     };
@@ -45,8 +49,8 @@ const Body = () => {
   if (onlineStatus === false)
     return <h1 className="text-center text-red-600 text-lg font-semibold mt-4">Looks like you are offline!! Please check your internet connection</h1>;
 
-  if (!listOfRestaurants.length) return <Shimmer/>;
-  return  (
+  if (!listOfRestaurants.length) return <Shimmer />;
+  return (
     <div className="min-h-screen flex flex-col justify-between">
       <div className="mt-6 mb-4 flex flex-col sm:flex-row items-center justify-center gap-4 px-4">
         <input
@@ -77,13 +81,13 @@ const Body = () => {
 
       {filteredRestaurants.length && <div className="flex-grow">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
-            <RestaurantCardPromoted resData={filteredRestaurants[0]} />
-            {filteredRestaurants.slice(1)
-          .map((restaurant) => (
-            <Link to={`/restaurant/${restaurant.info.id}`} key={restaurant.info.id} data-testid="resCard">
-              <RestaurantCard resData={restaurant} />
-            </Link>
-          ))}
+          <RestaurantCardPromoted resData={filteredRestaurants[0]} />
+          {filteredRestaurants.slice(1)
+            .map((restaurant) => (
+              <Link to={`/restaurant/${restaurant.info.id}`} key={restaurant.info.id} data-testid="resCard">
+                <RestaurantCard resData={restaurant} />
+              </Link>
+            ))}
         </div>
       </div>}
 

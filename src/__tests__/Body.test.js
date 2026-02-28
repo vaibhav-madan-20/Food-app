@@ -11,8 +11,9 @@ import * as onlineStatus from "../utils/useOnlineStatus";  // Import useOnlineSt
 
 global.fetch = jest.fn(() => {
     return Promise.resolve({
-        json: () => {
-            return Promise.resolve(MOCK_DATA);
+        ok: true,
+        text: () => {
+            return Promise.resolve(JSON.stringify(MOCK_DATA));
         }
     });
 });

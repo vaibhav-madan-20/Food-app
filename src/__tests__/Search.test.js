@@ -1,24 +1,25 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import {act} from "react";
+import { act } from "react";
 import { BrowserRouter } from "react-router-dom";
 import MOCK_DATA from "./mocks/mockResListData.json";
 import Body from "../components/Body";
 
-global.fetch = jest.fn(()=>{
+global.fetch = jest.fn(() => {
     return Promise.resolve({
-        json: ()=> {
-            return Promise.resolve(MOCK_DATA);
+        ok: true,
+        text: () => {
+            return Promise.resolve(JSON.stringify(MOCK_DATA));
         }
     })
 });
 
-it("Should render the body component",async()=>{
+it("Should render the body component", async () => {
     await act(
-        async ()=>
+        async () =>
             render(
                 <BrowserRouter>
-                    <Body/>
+                    <Body />
                 </BrowserRouter>
             )
     );
@@ -27,7 +28,7 @@ it("Should render the body component",async()=>{
 
     const searchInput = screen.getByTestId("searchInput");
     // const searchBtn = screen.getByRole('button',{name: 'Search'});
-    fireEvent.change(searchInput,{target: {value: "and"}});
+    fireEvent.change(searchInput, { target: { value: "and" } });
     // fireEvent.click(searchBtn);
 
     const cardsAfterSearch = screen.getAllByTestId("resCard");

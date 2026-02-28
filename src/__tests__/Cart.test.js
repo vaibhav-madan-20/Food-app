@@ -11,22 +11,23 @@ import Header from "../components/Header";
 import RestaurantMenu from "../components/RestaurantMenu";
 import Cart from "../components/Cart";
 
-global.fetch = jest.fn(()=>{
+global.fetch = jest.fn(() => {
     return Promise.resolve({
-        json: ()=>{
-            return Promise.resolve(MOCK_DATA_MENU);
+        ok: true,
+        text: () => {
+            return Promise.resolve(JSON.stringify(MOCK_DATA_MENU));
         }
     });
 });
 
-it("Should load restaurant menu component", async()=> {
-    await act(async ()=>
+it("Should load restaurant menu component", async () => {
+    await act(async () =>
         render(
             <BrowserRouter>
                 <Provider store={appStore}>
-                    <Header/>
-                    <RestaurantMenu/>
-                    <Cart/>
+                    <Header />
+                    <RestaurantMenu />
+                    <Cart />
                 </Provider>
             </BrowserRouter>
         )
@@ -35,7 +36,7 @@ it("Should load restaurant menu component", async()=> {
     const accordion_header = screen.getByText("Recommended (20)");
     fireEvent.click(accordion_header);
     fireEvent.click(accordion_header);
-    
+
     expect(screen.getAllByTestId("foodItems").length).toBe(20);
     expect(screen.getByText("Cart (0)")).toBeInTheDocument();
 
@@ -48,7 +49,7 @@ it("Should load restaurant menu component", async()=> {
 
     expect(screen.getAllByTestId("foodItems").length).toBe(22);
 
-    const clearCart = screen.getByRole('button', {name: 'Clear cart'});
+    const clearCart = screen.getByRole('button', { name: 'Clear cart' });
     fireEvent.click(clearCart);
     expect(screen.getAllByTestId("foodItems").length).toBe(20);
 });
