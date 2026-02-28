@@ -17,11 +17,22 @@ export default async function handler(req) {
 
     try {
         const response = await fetch(SWIGGY_URL, {
+            method: "GET",
+            redirect: "follow",
             headers: {
                 "User-Agent":
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-                "Accept": "application/json, text/plain, */*",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                "Accept":
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
                 "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "none",
+                "Sec-Fetch-User": "?1",
+                "Upgrade-Insecure-Requests": "1",
+                "Cache-Control": "max-age=0",
             },
         });
 
@@ -29,7 +40,10 @@ export default async function handler(req) {
 
         if (!text || text.length === 0) {
             return new Response(
-                JSON.stringify({ error: "Empty response from Swiggy API", swiggyStatus: response.status }),
+                JSON.stringify({
+                    error: "Empty response from Swiggy API",
+                    swiggyStatus: response.status,
+                }),
                 { status: 502, headers: { "Content-Type": "application/json" } }
             );
         }
@@ -39,6 +53,7 @@ export default async function handler(req) {
             headers: {
                 "Content-Type": "application/json",
                 "Cache-Control": "s-maxage=300, stale-while-revalidate",
+                "Access-Control-Allow-Origin": "*",
             },
         });
     } catch (error) {
