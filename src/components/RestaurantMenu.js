@@ -13,7 +13,8 @@ const RestaurantMenu = () => {
     if (resInfo === null) return null;
     const { text } = resInfo.data.cards[0].card.card;
     const { cuisines, costForTwoMessage } = resInfo.data.cards[2].card.card.info;
-    const categories = (resInfo.data.cards[4].groupedCard.cardGroupMap.REGULAR.cards).filter(
+    const groupedCard = resInfo.data.cards.find(c => c.groupedCard);
+    const categories = (groupedCard.groupedCard.cardGroupMap.REGULAR.cards).filter(
         r => r?.["card"]?.card?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
     )
 
@@ -24,13 +25,14 @@ const RestaurantMenu = () => {
             <ul>
                 {categories.map((c, index) => {
                     return <RestaurantCategory props={c}
-                    key={c.card.card.title}
-                    showItems={index === showIndex ? true : false}
-                    setShowIndex={() => {
-                        showIndex === index ? setShowIndex(false) :
-                        setShowIndex(index)
-                    }}
-                />})}
+                        key={c.card.card.title}
+                        showItems={index === showIndex ? true : false}
+                        setShowIndex={() => {
+                            showIndex === index ? setShowIndex(false) :
+                                setShowIndex(index)
+                        }}
+                    />
+                })}
             </ul>
         </div>
     )
